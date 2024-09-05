@@ -59,7 +59,30 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+function playSound(e) {
+  // audio is the name of the object. [data-key] is an custom attribute.
+  // this selects any objects that contain both. 
+  const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+  // [data-key] is not inside .key, this just selects objects that contain both.
+  const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+  if (!audio) return; // If there is no audio file associated with the key
+                      // stop the function from running all together
+  audio.currentTime = 0; // rewind to the beggining, every time the sound plays
+  // it is immediately rewinded to the beginning so I can hit it quickly
+  audio.play(); // Plays the selected audio
+  key.classList.add('playing'); // adds a css class .playing to element 
+}
 
+
+function removeTransition(e) {
+  // skip if this transition is not by the property 'transform'
+  if (e.propertyName !== 'transform') return;
+  this.classList.remove('playing');
+}
+
+const keys = document.querySelectorAll('.key');
+keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+window.addEventListener('keydown', playSound);
 </script>
 
 
